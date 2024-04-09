@@ -3,7 +3,7 @@ USE fruits;
 
 CREATE TABLE fruits (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   name VARCHAR(50) NOT NULL
+   name VARCHAR(50) NOT NULL,
    calories INT NOT NULL
 );
 

@@ -12,7 +12,7 @@
 
 <ul>
     <?php foreach ($fruits as $fruit) { ?>
-        <li>One <a class="post" href="/show?id=<?= $post['id'] ?>"><?= htmlspecialchars($fruit['name']) ?></a> has <?= $fruit['calories'] ?>
+        <li>One <a class="post" href="/show?id=<?= $fruit['id'] ?>"><?= htmlspecialchars($fruit['name']) ?></a> has <?= $fruit['calories'] ?>
             <form class="delete-form" method="POST" action="/">
                 <input type='hidden' name='_method' value='DELETE'/>
                 <input type='hidden' name='id' value="<?= $fruit["id"] ?>"/>

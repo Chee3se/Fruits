@@ -3,6 +3,7 @@
 namespace controllers;
 
 use Core\Database;
+use Core\Validator;
 
 class FruitController
 {
@@ -44,11 +45,11 @@ class FruitController
 
         $calories = $_POST['calories'];
 
-        if (!Validator::string($title, max: 50, min: 2)) {
+        if (!Validator::string($name, min: 2, max: 50)) {
             $errors['name'] = 'Name must be between 2 and 50 characters';
         }
 
-        if (!Validator::number($category_id)) {
+        if (!Validator::number($calories)) {
             $errors['calories'] = 'Calories must be a number';
         }
 
@@ -63,8 +64,7 @@ class FruitController
         view('fruits/create', [
             'page_title' => 'Create Post',
             'errors' => $errors,
-            'name' => $name,
-            'calories' => $calories
+            'fruit' => compact('name', 'calories')
         ]);
     }
 
@@ -72,10 +72,10 @@ class FruitController
     {
         $db = new Database(require base_path('config.php'));
 
-        $post = $db->query('SELECT * FROM fruits WHERE id = ?', [$id])->fetch();
+        $fruit = $db->query('SELECT * FROM fruits WHERE id = :id', [':id' => $id])->fetch();
 
         view('fruits/show', [
-            'page_title' => $post['title'],
+            'page_title' => $fruit['name'],
             'fruit' => $fruit
         ]);
     }
@@ -84,10 +84,10 @@ class FruitController
     {
         $db = new Database(require base_path('config.php'));
 
-        $post = $db->query('SELECT * FROM fruits WHERE id = ?', [$id])->fetch();
+        $fruit = $db->query('SELECT * FROM fruits WHERE id = :id', [':id' => $id])->fetch();
 
-        view('posts/edit', [
-            'page_title' => 'Edit Post',
+        view('fruits/edit', [
+            'page_title' => 'Edit a Fruit',
             'fruit' => $fruit
         ]);
     }
@@ -102,18 +102,18 @@ class FruitController
 
         $calories = $_POST['calories'];
 
-        if (!Validator::string($title, max: 50, min: 2)) {
+        if (!Validator::string($name, max: 50, min: 2)) {
             $errors['name'] = 'Name must be between 2 and 50 characters';
         }
 
-        if (!Validator::number($category_id)) {
+        if (!Validator::number($calories)) {
             $errors['calories'] = 'Calories must be a number';
         }
 
         if (empty($errors)) {
             $db->update('fruits', $id, compact('name', 'calories'));
 
-            header('Location: /');
+            header('Location: /show?id=' . $id);
 
             die();
         }
@@ -121,8 +121,7 @@ class FruitController
         view('fruits/edit', [
             'page_title' => 'Edit Post',
             'errors' => $errors,
-            'name' => $name,
-            'calories' => $calories
+            'fruit' => compact('name', 'calories', 'id')
         ]);
     }
 
